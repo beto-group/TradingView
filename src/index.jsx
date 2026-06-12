@@ -25,7 +25,7 @@ async function View({ folderPath, dc }) {
             if (!el) {
                 el = activeDocument.createElement('style');
                 el.id = FULLTAB_ID;
-                el.innerHTML = immersiveCss;
+                el.textContent = immersiveCss;
                 activeDocument.head.appendChild(el);
             }
             return () => { 
