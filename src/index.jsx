@@ -1,4 +1,3 @@
-/* eslint-disable @microsoft/sdl/no-inner-html, no-unsanitized/property */
 
 async function View({ folderPath, dc }) {
     const { useEffect, useState, useRef } = dc;
