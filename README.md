@@ -34,12 +34,12 @@ Welcome to **Trading View**. This component provides a local, high-frequency das
 
 ## Features
 
-### 📡 Data Ingestion & Analysis
+### Data Ingestion & Analysis
 *   💹 **Real-Time WebSocket Engine**: Streams tick-by-tick public trade and limit order book data directly from Binance at zero cost.
 *   📐 **Cross-Correlation Function (CCF)**: Continually measures the microsecond lag correlation between a Lead asset (BTC) and a Lag asset (SOL).
 *   📉 **Order Flow Imbalance (OFI)**: Evaluates bid/ask pressure at the top of the order book to confirm signal direction.
 
-### 🛡️ Runtime & Performance
+### Runtime & Performance
 *   🏎️ **In-Memory Ring Buffers**: Uses sliding windows to maintain high read/write performance on tick data directly in memory.
 *   🧹 **Anti-Bleed Style Isolation**: Scopes layout components under rigid container class keys, preventing CSS leakage into host Obsidian workspace configurations.
 *   🔌 **Immersive Full-Tab Dashboard**: Uses Datacore's native reparenting to present an edge-to-edge trading workspace overlay.
