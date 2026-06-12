@@ -1,5 +1,5 @@
 const { useMemo, useState, useRef } = dc;
-const activeFile = dc.resolvePath("TradingView");
+const activeFile = dc.resolvePath("TRADING VIEW.md");
 const folderPath = activeFile 
     ? activeFile.substring(0, activeFile.lastIndexOf('/')) 
     : "_RESOURCES/DATACORE/_DONE/TradingView";
