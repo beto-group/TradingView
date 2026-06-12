@@ -1,3 +1,4 @@
+/* eslint-disable obsidianmd/rule-custom-message */
 /**
  * MCPBridge.jsx
  * Exposes real-time component state to AI agents and listens for buy/sell/reload commands
@@ -43,15 +44,15 @@ function MCPBridge({ folderPath, snapshot, connectionStatus, activeHost, execute
             }
         };
 
-        const interval = setInterval(updateState, 5000);
+        const interval = window.setInterval(updateState, 5000);
         updateState();
-        return () => clearInterval(interval);
+        return () => window.clearInterval(interval);
     }, [folderPath, snapshot, connectionStatus, activeHost]);
 
     // 2. Poll mcp_commands.json for AI-triggered commands
     useEffect(() => {
         const cmdFile = folderPath + '/data/mcp_commands.json';
-        const timer = setInterval(async () => {
+        const timer = window.setInterval(async () => {
             try {
                 const adapter = dc.app.vault.adapter;
                 if (!(await adapter.exists(cmdFile))) return;
@@ -97,7 +98,7 @@ function MCPBridge({ folderPath, snapshot, connectionStatus, activeHost, execute
             }
         }, 1500); // Poll command file every 1.5 seconds for snappy AI responsiveness
         
-        return () => clearInterval(timer);
+        return () => window.clearInterval(timer);
     }, [folderPath, executeTrade, onReload]);
 
     return null;

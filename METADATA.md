@@ -2,7 +2,7 @@
 author: beto.group
 version: 1.0.0
 id: trading-view-372
-name: TRADING VIEW
+name: TradingView
 description: Real-time, zero-cost, crypto-only proprietary trading system analyzing lead-lag correlation and order flow imbalance.
 status: stable
 complexity: advanced

@@ -1,0 +1,9 @@
+{
+  "id": "eslint-verifier-dummy",
+  "name": "ESLint Verifier Dummy",
+  "version": "1.0.0",
+  "minAppVersion": "1.4.11",
+  "description": "Dummy manifest to satisfy eslint-plugin-obsidianmd load requirements.",
+  "author": "beto.group",
+  "isDesktopOnly": false
+}

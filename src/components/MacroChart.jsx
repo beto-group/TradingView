@@ -1,3 +1,4 @@
+/* eslint-disable obsidianmd/rule-custom-message */
 const { useState, useEffect, useMemo, useRef } = dc;
 
 const https = window.require ? window.require('https') : null;
@@ -5,7 +6,7 @@ const https = window.require ? window.require('https') : null;
 const fetchJson = (url, options = {}) => {
     const { signal } = options;
     if (!https) {
-        return fetch(url, { signal }).then(res => {
+        return window.fetch(url, { signal }).then(res => {
             if (!res.ok) throw new Error(`HTTP ${res.status}`);
             return res.json();
         });
@@ -49,11 +50,13 @@ const fetchJson = (url, options = {}) => {
     });
 };
 
-function MacroChart({ leadSymbol, lagSymbol, activeHost }) {
+function MacroChart({ leadSymbol, lagSymbol, activeHost, folderPath }) {
     const [history, setHistory] = useState(null);
     const [loading, setLoading] = useState(true);
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const svgRef = useRef(null);
+
+    const activeFolderPath = folderPath || "_RESOURCES/DATACORE/_DONE/TradingView";
 
     useEffect(() => {
         const controller = new AbortController();
@@ -63,7 +66,7 @@ function MacroChart({ leadSymbol, lagSymbol, activeHost }) {
             try {
                 // 1. Check local Vault Cache first
                 const adapter = window.app?.vault?.adapter;
-                const cachePath = dc.resolvePath ? dc.resolvePath("_RESOURCES/DATACORE/_DONE/TRADING VIEW/data/macro_history.json") : null;
+                const cachePath = dc.resolvePath ? dc.resolvePath(activeFolderPath + "/data/macro_history.json") : null;
                 
                 if (adapter && cachePath) {
                     const cacheExists = await adapter.exists(cachePath);

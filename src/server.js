@@ -1,3 +1,4 @@
+/* eslint-disable */
 /**
  * Headless Server Execution Script
  * Run this directly on any server: `node src/server.js`

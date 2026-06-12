@@ -1,10 +1,10 @@
-# 🛠️ Contributing to Trading View (main)
+# Contributing to Trading View (main)
 
 Welcome! This document outlines the core developer standards, unit testing frameworks, and compilation guidelines required to maintain the advanced implementation of the Trading View.
 
 ---
 
-## 🏛️ Core Architecture Pillars
+## Core Architecture Pillars
 
 1.  **Full-Pane DOM Interception**:
     *   The view targets the nearest `.workspace-leaf-content` ancestor and replaces standard Markdown leaves with a full-pane portal overlay.
@@ -18,6 +18,6 @@ Welcome! This document outlines the core developer standards, unit testing frame
 
 ---
 
-## 🚀 Local Compilation & Test Runner Loop
+## Local Compilation & Test Runner Loop
 
 *   **Hot Reload Trigger**: During development, use the reload action menu or press the reload button inside the UI panel to invoke `dc.app.workspace.activeLeaf.rebuildView()`. This automatically flushes Obsidian's internal module cache, loading your latest React changes instantly with zero system reboots.

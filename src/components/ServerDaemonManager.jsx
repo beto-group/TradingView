@@ -1,6 +1,6 @@
-const { useState, useEffect, useRef } = dc;
+const { useState, useEffect } = dc;
 
-function ServerDaemonManager({ credentials }) {
+function ServerDaemonManager({ credentials, folderPath }) {
     const [daemonStatus, setDaemonStatus] = useState('Stopped'); // 'Stopped' | 'Installing' | 'Running' | 'Error'
     const [pid, setPid] = useState(null);
     const [logs, setLogs] = useState([]);
@@ -16,7 +16,7 @@ function ServerDaemonManager({ credentials }) {
     const getPaths = () => {
         if (!isNodeAvailable) return null;
         const vaultPath = window.app.vault.adapter.getBasePath();
-        const resolvedPath = dc.resolvePath("TRADING VIEW/src/server.js");
+        const resolvedPath = dc.resolvePath(folderPath + "/src/server.js");
         const serverScriptPath = path.join(vaultPath, resolvedPath);
         const workingDir = path.dirname(serverScriptPath);
         const logFilePath = path.join(workingDir, 'daemon.log');
@@ -33,7 +33,7 @@ function ServerDaemonManager({ credentials }) {
                 // Signal 0 checks if the process exists without killing it
                 process.kill(savedPid, 0);
                 isRunning = true;
-            } catch (e) {
+            } catch {
                 // Process is dead
             }
 
@@ -61,15 +61,19 @@ function ServerDaemonManager({ credentials }) {
                 const stats = fs.statSync(logFilePath);
                 lastSize = Math.max(0, stats.size - 2000); // Read last 2KB on mount
             }
-        } catch (e) {}
+        } catch {
+            /* ignore */
+        }
 
         const pollLogs = () => {
             try {
                 if (fs.existsSync(logFilePath)) {
                     const stats = fs.statSync(logFilePath);
                     if (stats.size > lastSize) {
+                        const BufferClass = window.require ? window.require('buffer').Buffer : null;
+                        if (!BufferClass) return;
                         const fd = fs.openSync(logFilePath, 'r');
-                        const buffer = Buffer.alloc(stats.size - lastSize);
+                        const buffer = BufferClass.alloc(stats.size - lastSize);
                         fs.readSync(fd, buffer, 0, stats.size - lastSize, lastSize);
                         fs.closeSync(fd);
                         
@@ -85,8 +89,8 @@ function ServerDaemonManager({ credentials }) {
         };
 
         pollLogs();
-        const interval = setInterval(pollLogs, 1000);
-        return () => clearInterval(interval);
+        const interval = window.setInterval(pollLogs, 1000);
+        return () => window.clearInterval(interval);
     }, [daemonStatus]);
 
     const addLog = (message) => {
@@ -118,7 +122,9 @@ function ServerDaemonManager({ credentials }) {
                             extraPaths.push(path.join(nvmVersionsDir, v, 'bin'));
                         });
                     }
-                } catch (e) {}
+                } catch {
+                    /* ignore */
+                }
             }
 
             const childEnv = {
@@ -163,7 +169,9 @@ function ServerDaemonManager({ credentials }) {
                 if (fs.existsSync(logFilePath)) {
                     fs.writeFileSync(logFilePath, '');
                 }
-            } catch (e) {}
+            } catch {
+                /* ignore */
+            }
 
             const out = fs.openSync(logFilePath, 'a');
             

@@ -32,7 +32,7 @@ Welcome to **Trading View**. This component provides a local, high-frequency das
 
 ---
 
-## ✨ Features
+## Features
 
 ### 📡 Data Ingestion & Analysis
 *   💹 **Real-Time WebSocket Engine**: Streams tick-by-tick public trade and limit order book data directly from Binance at zero cost.
@@ -46,7 +46,7 @@ Welcome to **Trading View**. This component provides a local, high-frequency das
 
 ---
 
-## 📦 Directory Index & Components
+## Directory Index & Components
 
 The package exposes the following compiled files:
 
@@ -60,18 +60,18 @@ The package exposes the following compiled files:
 
 ---
 
-## 🤖 AI Agent Integration (MCP Bridge)
+## AI Agent Integration (MCP Bridge)
 
 The component includes a native **MCP Bridge** to allow AI coding assistants and autonomous agents to monitor market data and execute paper trades directly through the UI.
 
 ### 1. Monitoring Component State
-AI agents can read [mcp_state.json](file:///_RESOURCES/DATACORE/_DONE/TRADING%20VIEW/data/mcp_state.json) to retrieve real-time state:
+AI agents can read [data/mcp_state.json](data/mcp_state.json) to retrieve real-time state:
 *   **connectionStatus**: `'Connected'`, `'Connecting'`, or `'Disconnected'`.
 *   **activeHost**: Current WebSocket connection node (`stream.binance.com` or fallback `stream.binance.us`).
 *   **leadAsset (BTC)** & **lagAsset (SOL)**: Instantaneous prices, OFI (Order Flow Imbalance), and spreads.
 
 ### 2. AI-Triggered Trade Execution
-To execute a trade or reload the component, the AI writes a command payload directly to [mcp_commands.json](file:///_RESOURCES/DATACORE/_DONE/TRADING%20VIEW/data/mcp_commands.json). 
+To execute a trade or reload the component, the AI writes a command payload directly to [data/mcp_commands.json](data/mcp_commands.json). 
 
 The component checks this file every 1.5 seconds. If it finds `executed: false`, it triggers the operation, locks the state to prevent duplicate fills, and writes back the execution results.
 

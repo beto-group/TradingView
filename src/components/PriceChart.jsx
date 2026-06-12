@@ -1,7 +1,11 @@
 const { useMemo, useState, useRef } = dc;
-const { MacroChart } = await dc.require(dc.resolvePath("TRADING VIEW/src/components/MacroChart.jsx"));
+const activeFile = dc.resolvePath("TradingView");
+const folderPath = activeFile 
+    ? activeFile.substring(0, activeFile.lastIndexOf('/')) 
+    : "_RESOURCES/DATACORE/_DONE/TradingView";
+const { MacroChart } = await dc.require(folderPath + "/src/components/MacroChart.jsx");
 
-function PriceChart({ history, activeHost }) {
+function PriceChart({ history, activeHost, folderPath }) {
     const [viewMode, setViewMode] = useState('micro'); // 'micro' | 'macro'
     const [hoveredIndex, setHoveredIndex] = useState(null);
     const svgRef = useRef(null);
@@ -188,7 +192,7 @@ function PriceChart({ history, activeHost }) {
                 )}
 
                 {viewMode === 'macro' ? (
-                    <MacroChart leadSymbol="btcusdt" lagSymbol="solusdt" activeHost={activeHost} />
+                    <MacroChart leadSymbol="btcusdt" lagSymbol="solusdt" activeHost={activeHost} folderPath={folderPath} />
                 ) : (
                     !chartData ? (
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', fontSize: '12px' }}>

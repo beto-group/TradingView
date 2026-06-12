@@ -1,3 +1,5 @@
 data/mcp_state.json
 data/trades_cache.json
 src/daemon.log
+.DS_Store
+src/.DS_Store

@@ -1,5 +1,9 @@
-const { useState, useEffect, useMemo, useRef } = dc;
-const { TradingEngine } = await dc.require(dc.resolvePath("TRADING VIEW/src/utils/TradingEngine.js"));
+const { useState, useEffect, useRef } = dc;
+const activeFile = dc.resolvePath("TradingView");
+const folderPath = activeFile 
+    ? activeFile.substring(0, activeFile.lastIndexOf('/')) 
+    : "_RESOURCES/DATACORE/_DONE/TradingView";
+const { TradingEngine } = await dc.require(folderPath + "/src/utils/TradingEngine.js");
 
 /**
  * React wrapper hook around the platform-agnostic TradingEngine class.
@@ -31,7 +35,7 @@ function useLeadLagEngine(getRawData, mathUtils, executeTrade, options = {}) {
     }
 
     useEffect(() => {
-        const interval = setInterval(() => {
+        const interval = window.setInterval(() => {
             const rawData = getRawData();
             if (!rawData) return;
             
@@ -67,7 +71,7 @@ function useLeadLagEngine(getRawData, mathUtils, executeTrade, options = {}) {
 
         }, updateInterval);
 
-        return () => clearInterval(interval);
+        return () => window.clearInterval(interval);
     }, [getRawData, mathUtils, correlationThreshold, minOFI, updateInterval, executeTrade]);
 
     return { engineState, tradeLogs };

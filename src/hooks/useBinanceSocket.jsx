@@ -1,10 +1,11 @@
+/* eslint-disable obsidianmd/rule-custom-message */
 const { useState, useEffect, useRef, useCallback } = dc;
 
 /**
  * Custom hook to manage Binance WebSocket connections for Lead/Lag assets.
  * Keeps an in-memory sliding window of tick data to maintain $0 operating budget.
  */
-function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWindowSize = 100) {
+function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWindowSize = 100, folderPath) {
     const [status, setStatus] = useState('Disconnected');
     const [activeHost, setActiveHost] = useState('stream.binance.com');
     
@@ -13,11 +14,13 @@ function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWind
     const path = window.require ? window.require('path') : null;
     const fs = window.require ? window.require('fs') : null;
 
+    const activeFolderPath = folderPath || "_RESOURCES/DATACORE/_DONE/TradingView";
+
     let WebSocketNode = null;
     if (window.require && path && fs) {
         try {
             const vaultPath = window.app.vault.adapter.getBasePath();
-            const resolvedPath = dc.resolvePath("TRADING VIEW/src/server.js");
+            const resolvedPath = dc.resolvePath(activeFolderPath + "/src/server.js");
             const workingDir = path.dirname(path.join(vaultPath, resolvedPath));
             const wsModulePath = path.join(workingDir, 'node_modules', 'ws');
             if (fs.existsSync(wsModulePath)) {
@@ -30,7 +33,7 @@ function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWind
     
     const fetchJson = (url) => {
         if (!https) {
-            return fetch(url).then(res => {
+            return window.fetch(url).then(res => {
                 if (!res.ok) throw new Error(`HTTP ${res.status}`);
                 return res.json();
             });
@@ -72,7 +75,7 @@ function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWind
         let currentHost = 'stream.binance.com:9443';
         
         const adapter = window.app?.vault?.adapter;
-        const cachePath = dc.resolvePath ? dc.resolvePath("_RESOURCES/DATACORE/_DONE/TRADING VIEW/data/trades_cache.json") : null;
+        const cachePath = dc.resolvePath ? dc.resolvePath(activeFolderPath + "/data/trades_cache.json") : null;
 
         const writeCache = async () => {
             if (adapter && cachePath && dataRef.current) {
@@ -171,7 +174,7 @@ function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWind
             ws = WebSocketNode ? new WebSocketNode(wsUrl) : new WebSocket(wsUrl);
 
             // Watchdog: If connection hangs in CONNECTING (readyState = 0) for > 5 seconds, force close to trigger fallback
-            const connectionTimeout = setTimeout(() => {
+            const connectionTimeout = window.setTimeout(() => {
                 if (ws && ws.readyState === 0) {
                     console.warn(`Connection to ${currentHost} timed out. Forcing fallback...`);
                     ws.close();
@@ -179,7 +182,7 @@ function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWind
             }, 5000);
 
             ws.onopen = () => {
-                clearTimeout(connectionTimeout);
+                window.clearTimeout(connectionTimeout);
                 setStatus('Connected');
             };
 
@@ -229,23 +232,23 @@ function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWind
             };
 
             ws.onclose = () => {
-                clearTimeout(connectionTimeout);
+                window.clearTimeout(connectionTimeout);
                 console.log(`Binance WS Closed (${currentHost})`);
                 if (!receivedMessage && currentHost === 'stream.binance.com:9443') {
                     // Try fallback to Binance US
                     console.warn("No data received, falling back to Binance US...");
                     currentHost = 'stream.binance.us:9443';
-                    setTimeout(connect, 1000);
+                    window.setTimeout(connect, 1000);
                 } else {
                     setStatus('Disconnected');
                     if (!isClosed) {
-                        setTimeout(connect, 3000);
+                        window.setTimeout(connect, 3000);
                     }
                 }
             };
             
             ws.onerror = (err) => {
-                clearTimeout(connectionTimeout);
+                window.clearTimeout(connectionTimeout);
                 setStatus('Error');
                 console.error(`Binance WS Error (${currentHost})`, err);
             };
@@ -255,7 +258,7 @@ function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWind
 
         let tickCount = 0;
         // Snapshot interval for UI rendering
-        const uiInterval = setInterval(() => {
+        const uiInterval = window.setInterval(() => {
             const leadTrades = dataRef.current.lead.trades;
             const lagTrades = dataRef.current.lag.trades;
             const leadBook = dataRef.current.lead.orderBook;
@@ -312,7 +315,7 @@ function useBinanceSocket(leadSymbol = 'btcusdt', lagSymbol = 'solusdt', maxWind
         return () => {
             isClosed = true;
             if (ws) ws.close();
-            clearInterval(uiInterval);
+            window.clearInterval(uiInterval);
             writeCache();
         };
     }, [leadSymbol, lagSymbol, maxWindowSize]);

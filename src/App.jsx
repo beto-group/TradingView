@@ -1,19 +1,26 @@
-const { DashboardGrid } = await dc.require(dc.resolvePath("TRADING VIEW/src/components/DashboardGrid.jsx"));
-const { OrderFlowPanel } = await dc.require(dc.resolvePath("TRADING VIEW/src/components/OrderFlowPanel.jsx"));
-const { CorrelationChart } = await dc.require(dc.resolvePath("TRADING VIEW/src/components/CorrelationChart.jsx"));
-const { PriceChart } = await dc.require(dc.resolvePath("TRADING VIEW/src/components/PriceChart.jsx"));
-const { AlpacaKeyManager } = await dc.require(dc.resolvePath("TRADING VIEW/src/components/AlpacaKeyManager.jsx"));
-const { ServerDaemonManager } = await dc.require(dc.resolvePath("TRADING VIEW/src/components/ServerDaemonManager.jsx"));
-const { useBinanceSocket } = await dc.require(dc.resolvePath("TRADING VIEW/src/hooks/useBinanceSocket.jsx"));
-const { useLeadLagEngine } = await dc.require(dc.resolvePath("TRADING VIEW/src/hooks/useLeadLagEngine.jsx"));
-const { useAlpacaKeychain } = await dc.require(dc.resolvePath("TRADING VIEW/src/hooks/useAlpacaKeychain.jsx"));
-const { MCPBridge } = await dc.require(dc.resolvePath("TRADING VIEW/src/components/MCPBridge.jsx"));
-const mathUtils = await dc.require(dc.resolvePath("TRADING VIEW/src/utils/math.js"));
+/* eslint-disable obsidianmd/rule-custom-message */
+const activeFile = dc.resolvePath("TradingView");
+const folderPath = activeFile 
+    ? activeFile.substring(0, activeFile.lastIndexOf('/')) 
+    : "_RESOURCES/DATACORE/_DONE/TradingView";
 
-const { useState, useEffect } = dc;
+const { DashboardGrid } = await dc.require(folderPath + "/src/components/DashboardGrid.jsx");
+const { OrderFlowPanel } = await dc.require(folderPath + "/src/components/OrderFlowPanel.jsx");
+const { CorrelationChart } = await dc.require(folderPath + "/src/components/CorrelationChart.jsx");
+const { PriceChart } = await dc.require(folderPath + "/src/components/PriceChart.jsx");
+const { AlpacaKeyManager } = await dc.require(folderPath + "/src/components/AlpacaKeyManager.jsx");
+const { ServerDaemonManager } = await dc.require(folderPath + "/src/components/ServerDaemonManager.jsx");
+const { useBinanceSocket } = await dc.require(folderPath + "/src/hooks/useBinanceSocket.jsx");
+const { useLeadLagEngine } = await dc.require(folderPath + "/src/hooks/useLeadLagEngine.jsx");
+const { useAlpacaKeychain } = await dc.require(folderPath + "/src/hooks/useAlpacaKeychain.jsx");
+const { MCPBridge } = await dc.require(folderPath + "/src/components/MCPBridge.jsx");
+const mathUtils = await dc.require(folderPath + "/src/utils/math.js");
 
-function App() {
-    const { status, activeHost, snapshot, getRawData } = useBinanceSocket('btcusdt', 'solusdt', 100);
+
+function App(props) {
+    const { folderPath: passedFolderPath } = props;
+    const activeFolderPath = passedFolderPath || folderPath;
+    const { status, activeHost, snapshot, getRawData } = useBinanceSocket('btcusdt', 'solusdt', 100, activeFolderPath);
     const { credentials, saveKeys, clearKeys, executeTrade } = useAlpacaKeychain();
     
     const { engineState, tradeLogs } = useLeadLagEngine(getRawData, mathUtils, executeTrade, {
@@ -25,7 +32,7 @@ function App() {
     return (
         <DashboardGrid>
             <MCPBridge 
-                folderPath="_RESOURCES/DATACORE/_DONE/TRADING VIEW"
+                folderPath={activeFolderPath}
                 snapshot={snapshot}
                 connectionStatus={status}
                 activeHost={activeHost}
@@ -46,7 +53,7 @@ function App() {
                     border: '1px solid var(--background-modifier-border)',
                     minHeight: '220px'
                 }}>
-                    <PriceChart history={snapshot.history} activeHost={activeHost} />
+                    <PriceChart history={snapshot.history} activeHost={activeHost} folderPath={activeFolderPath} />
                 </div>
                 
                 <div style={{ 
@@ -77,7 +84,7 @@ function App() {
             }}>
                 <AlpacaKeyManager credentials={credentials} onSave={saveKeys} onClear={clearKeys} />
                 
-                <ServerDaemonManager credentials={credentials} />
+                <ServerDaemonManager credentials={credentials} folderPath={activeFolderPath} />
 
                 <h3 style={{ margin: 0, fontSize: '14px', color: 'var(--text-normal)', display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <dc.Icon icon="list" style={{ width: '16px', height: '16px' }} />

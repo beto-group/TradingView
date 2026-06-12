@@ -62,9 +62,9 @@ function useAlpacaKeychain() {
         try {
             // Artificial latency simulation (50-200ms) to prevent unrealistic paper fills
             const simulatedLatency = Math.floor(Math.random() * 150) + 50;
-            await new Promise(r => setTimeout(r, simulatedLatency));
+            await new Promise(r => window.setTimeout(r, simulatedLatency));
 
-            const response = await fetch('https://paper-api.alpaca.markets/v2/orders', {
+            const response = await window.fetch('https://paper-api.alpaca.markets/v2/orders', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
