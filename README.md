@@ -19,7 +19,7 @@
   <hr>
 </div>
 
-![Trading View Walkthrough](assets/tradingview.clip.gif)
+<img src="assets/videos/preview.gif" alt="Walkthrough" width="100%">
 
 <div align="center">
   <p>
@@ -113,4 +113,27 @@ Once processed, the component automatically updates the command file to:
   }
 }
 ```
+
+---
+
+## Quick Start
+
+1. Download the Repository (cloning or downloading into the Obsidian vault folder).
+2. Install Datacore (ensuring the plugin is active).
+3. Open the Entry Note (specifying the exact loader note `TRADING VIEW.md`).
+
+---
+
+## Previews
+
+| Preview | Description |
+| :--- | :--- |
+| ![Preview 1](assets/image/preview_1.webp) | Real-time normalized price tracking dashboard showing Lead and Lag assets. |
+
+---
+
+## Contributors
+
+- beto.group
+
 

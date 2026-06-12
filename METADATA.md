@@ -15,8 +15,8 @@ compatibility:
 repository: []
 missing: []
 resources:
-  - assets/trading_view.webp
-  - assets/tradingview.clip.gif
+  - assets/image/preview_1.webp
+  - assets/videos/preview.gif
 type: DatacoreComponent
 target: Datacore
 security:
